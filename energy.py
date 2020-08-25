@@ -1,6 +1,6 @@
 import numpy as np
 import plotly.graph_objs as px
-import plotly.express as ex
+
 import matplotlib.pyplot as plt
 import plotly.offline
 from tqdm import tqdm
@@ -15,7 +15,6 @@ class objec:
         self.vz = vz
         self.name = name
         self.pos = []
-        self.previousvelocity = [(self.vx, self.vy, self.vz), (self.vx, self.vy, self.vz)]
 
     def movemement(self, objects, day):
         fx = fy = fz = 0
