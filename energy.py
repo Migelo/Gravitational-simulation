@@ -59,7 +59,7 @@ class objec:
     def energycalc(self, object2):
         self.energy = self.mass * ((0.5 * (self.vx ** 2 + self.vy ** 2 + self.vz ** 2))\
                                        - (object2.mass / np.sqrt((object2.z - self.z) ** 2 + (object2.y - self.y) ** 2 + (object2.x - self.x) ** 2)))
-        return self.energy
+
 
     def info(self):
         print(f'{self.name} Position = {self.x},{self.y},{self.z} \nVelocity = {self.vx},{self.vy},{self.vz}')
@@ -79,6 +79,7 @@ def main():
     trace = []
 
     energy = []
+    en = 0
 
     for i, _ in tqdm(enumerate(time), total=time.size):
         for obj in objects:
@@ -86,6 +87,8 @@ def main():
             for body in objects:
                 if body != obj:
                     obj.energycalc(body)
+            en += obj.energy
+        energy.append(en)
 
     for obj in objects:
         obj.pos = np.array(obj.pos)
@@ -102,7 +105,6 @@ def main():
 
     fig = px.Figure(data=trace)
     plotly.offline.plot(fig)
-
     plt.xlabel("Time")
     plt.ylabel("Energy")
     plt.plot(energy)
