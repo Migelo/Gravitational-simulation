@@ -17,7 +17,10 @@ class objec:
         self.name = name
         self.pos = []
 
-    def movement(self, objects, day):
+    def initial_force(self, objects):
+        self.ax, self.ay, self.az = self.acceleration(objects)
+
+    def acceleration(self, objects):
         fx = fy = fz = 0
         for body in objects:
             if body != self:
@@ -45,28 +48,18 @@ class objec:
                 fx += f1
                 fy += f2
                 fz += f3
+        return fx / self.mass, fy / self.mass, fz / self.mass
 
-        ax = fx / self.mass
-        ay = fy / self.mass
-        az = fz / self.mass
+    def movement(self, objects, day):
+        ax, ay, az = self.acceleration(objects)
 
-        try:
-            self.x += self.vx * day
-            self.y += self.vy * day
-            self.z += self.vz * day
+        self.x += self.vx * day
+        self.y += self.vy * day
+        self.z += self.vz * day
 
-            self.vx += ((ax + self.ax) / 2) * day
-            self.vy += ((ay + self.ay) / 2) * day
-            self.vz += ((az + self.az) / 2) * day
-
-        except AttributeError:
-            self.vx += ax * day
-            self.vy += ay * day
-            self.vz += az * day
-
-            self.x += self.vx * day
-            self.y += self.vy * day
-            self.z += self.vz * day
+        self.vx += ((ax + self.ax) / 2) * day
+        self.vy += ((ay + self.ay) / 2) * day
+        self.vz += ((az + self.az) / 2) * day
 
         self.ax = ax
         self.ay = ay
@@ -88,8 +81,11 @@ def main():
     Earth = objec((1, 0, 0), 3.00348959632e-6, "Earth", "#0985eb", 0, 0, 1)
 
     objects = [Sun, Earth]
+    for obje in objects:
+        obje.initial_force(objects)
 
-    time = np.arange(0, 100*2*np.pi, 2*np.pi/365)
+
+    #time = np.arange(0, 100*2*np.pi, 2*np.pi/365)
     time = np.arange(0, 10*2*np.pi, 2*np.pi/365)
 
     day = time[1]
@@ -111,9 +107,9 @@ def main():
     for obj in objects:
         obj.pos = np.array(obj.pos)
         trace.append(px.Scatter3d(
-                x = obj.pos[:, 0],
-                y = obj.pos[:, 1],
-                z = obj.pos[:, 2],
+                x=obj.pos[:, 0],
+                y=obj.pos[:, 1],
+                z=obj.pos[:, 2],
                 mode='lines',
                 line=dict(
                 color=obj.colour,
@@ -134,5 +130,6 @@ def main():
     plt.title("Leapfrog")
     plt.plot(obj.pos[:,2])
     plt.show()
+
 
 main()
