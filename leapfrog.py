@@ -54,9 +54,9 @@ class objec:
     def movement(self, objects, day):
         ax, ay, az = self.acceleration(objects)
 
-        self.x += self.vx * day + ax * day**2
-        self.y += self.vy * day + ay * day**2
-        self.z += self.vz * day + az * day**2
+        self.x += self.vx * day + .5 * ax * day**2
+        self.y += self.vy * day + .5 * ay * day**2
+        self.z += self.vz * day + .5 * az * day**2
 
         self.vx += ((ax + self.ax*0)) * day
         self.vy += ((ay + self.ay*0)) * day
